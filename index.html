@@ -1,9 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StatutJuste — Trouvez votre statut juridique en 2 minutes</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -186,7 +186,7 @@
   .bv-item-val.green { color: #6DBF45; }
   .bv-item-val.gold { color: var(--gold); }
 
-  /* PRICING */
+  /* PRICING — mis à jour paiement unique */
   .pricing { background: #EDE8DE; padding: 5rem 2.5rem; text-align: center; }
   .pricing h2 { margin: 0 auto 1rem; }
   .pricing-sub { color: var(--muted); font-size: 1rem; margin-bottom: 3rem; }
@@ -200,10 +200,16 @@
   .price-amount { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 900; line-height: 1; }
   .price-amount sup { font-size: 1.5rem; vertical-align: super; }
   .price-period { color: var(--muted); font-size: .85rem; margin-top: .3rem; }
-  .price-trial { font-size: .82rem; color: var(--accent); font-weight: 500; margin: .8rem 0 1.5rem; }
+  .price-once { font-size: .82rem; color: var(--accent); font-weight: 500; margin: .8rem 0 1.5rem; }
   .price-features { text-align: left; margin-bottom: 1.8rem; display: flex; flex-direction: column; gap: .7rem; }
   .pf { font-size: .88rem; color: var(--muted); display: flex; gap: .6rem; align-items: flex-start; line-height: 1.4; }
   .pf::before { content: '✓'; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+  .price-guarantee {
+    margin-top: 1rem; padding: .8rem 1rem;
+    background: #EAF0E2; border-radius: .5rem;
+    font-size: .8rem; color: var(--accent); font-weight: 500;
+    display: flex; align-items: center; gap: .5rem; justify-content: center;
+  }
 
   /* CTA */
   .cta-section {
@@ -233,7 +239,6 @@
   @keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes floatSymbol { 0%,100% { transform: translateY(-50%) rotate(-2deg); } 50% { transform: translateY(-52%) rotate(2deg); } }
 
-  /* SCROLL REVEAL */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
@@ -270,7 +275,7 @@
     <a href="#questionnaire" class="btn-primary">Trouver mon statut → <span style="opacity:.6;font-size:.8rem">2 min</span></a>
     <a href="#comment" class="btn-ghost">Voir comment ça marche ↓</a>
   </div>
-  <p class="hero-note">Essai gratuit 7 jours · Sans carte bancaire · Sans jargon juridique</p>
+  <p class="hero-note">Paiement unique · Accès à vie · Sans jargon juridique</p>
 </section>
 
 <!-- STATS -->
@@ -278,7 +283,7 @@
   <div class="stat"><div class="stat-val">6</div><div class="stat-lbl">statuts juridiques<br>couverts</div></div>
   <div class="stat"><div class="stat-val">8</div><div class="stat-lbl">questions pour une<br>recommandation complète</div></div>
   <div class="stat"><div class="stat-val">2 min</div><div class="stat-lbl">pour obtenir votre<br>résultat personnalisé</div></div>
-  <div class="stat"><div class="stat-val">0 €</div><div class="stat-lbl">pour tester<br>pendant 7 jours</div></div>
+  <div class="stat"><div class="stat-val">29 €</div><div class="stat-lbl">une seule fois,<br>accès à vie</div></div>
 </div>
 
 <!-- PROBLEM -->
@@ -360,10 +365,10 @@
         </div>
       </div>
       <div class="benefit">
-        <div class="benefit-icon-wrap">🔄</div>
+        <div class="benefit-icon-wrap">♾️</div>
         <div>
-          <div class="benefit-title">Mis à jour régulièrement</div>
-          <div class="benefit-desc">Le droit évolue chaque année. Nos recommandations sont mises à jour pour refléter les dernières lois et plafonds en vigueur.</div>
+          <div class="benefit-title">Accès à vie, une seule fois</div>
+          <div class="benefit-desc">Vous payez 29 € une seule fois et accédez à votre recommandation complète pour toujours. Aucun abonnement, aucune surprise.</div>
         </div>
       </div>
     </div>
@@ -386,22 +391,23 @@
 <!-- PRICING -->
 <section class="pricing" id="tarifs">
   <div class="section-tag" style="justify-content:center">Tarif</div>
-  <h2>Un prix honnête.<br><em>Une valeur réelle.</em></h2>
-  <p class="pricing-sub">Moins cher qu'une heure avec un expert-comptable. Plus rapide qu'un RDV.</p>
+  <h2>Un prix unique.<br><em>Un accès à vie.</em></h2>
+  <p class="pricing-sub">Moins cher qu'une heure avec un expert-comptable. Résultat immédiat.</p>
   <div class="price-card reveal">
-    <div class="price-badge">Accès complet</div>
-    <div class="price-amount"><sup>€</sup>19</div>
-    <div class="price-period">par mois, sans engagement</div>
-    <div class="price-trial">✦ 7 jours gratuits, sans carte bancaire</div>
+    <div class="price-badge">Paiement unique — accès à vie</div>
+    <div class="price-amount"><sup>€</sup>29</div>
+    <div class="price-period">une seule fois, pour toujours</div>
+    <div class="price-once">✦ Aucun abonnement · Aucune surprise</div>
     <div class="price-features">
-      <div class="pf">Questionnaire personnalisé illimité</div>
-      <div class="pf">Recommandation complète avec alternatives</div>
+      <div class="pf">Questionnaire personnalisé en 8 questions</div>
+      <div class="pf">Recommandation complète avec explication détaillée</div>
+      <div class="pf">Comparatif des 2 meilleures alternatives</div>
       <div class="pf">Plan d'action étape par étape</div>
-      <div class="pf">Coûts et délais détaillés</div>
-      <div class="pf">Mises à jour légales incluses</div>
-      <div class="pf">Accès à toutes les futures fonctionnalités</div>
+      <div class="pf">Coûts et délais réels détaillés</div>
+      <div class="pf">Accès à vie à votre recommandation</div>
     </div>
-    <a href="#questionnaire" class="btn-primary" style="width:100%;justify-content:center">Commencer gratuitement →</a>
+    <a href="#questionnaire" class="btn-primary" style="width:100%;justify-content:center">Obtenir ma recommandation →</a>
+    <div class="price-guarantee">🛡️ Satisfait ou remboursé sous 7 jours</div>
   </div>
 </section>
 
@@ -409,9 +415,9 @@
 <section class="cta-section" id="questionnaire">
   <div class="section-tag" style="justify-content:center;color:var(--gold)">Prêt à vous lancer ?</div>
   <h2>Votre statut idéal est à<br><em>8 questions de vous.</em></h2>
-  <p class="cta-sub">Rejoignez les entrepreneurs qui ont choisi leur statut en toute confiance — sans rendez-vous, sans jargon, sans stress.</p>
-  <a href="#" class="btn-primary" style="font-size:1rem;padding:1rem 2.4rem">Trouver mon statut maintenant →</a>
-  <p class="cta-note">Essai gratuit 7 jours · Résultat immédiat · Annulation en 1 clic</p>
+  <p class="cta-sub">29 € pour prendre la bonne décision dès le départ — et éviter des erreurs qui coûtent bien plus cher.</p>
+  <a href="#" class="btn-primary" style="font-size:1rem;padding:1rem 2.4rem">Obtenir ma recommandation — 29 € →</a>
+  <p class="cta-note">Paiement sécurisé · Accès immédiat · Satisfait ou remboursé 7 jours</p>
 </section>
 
 <!-- FOOTER -->
