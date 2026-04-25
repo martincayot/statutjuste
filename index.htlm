@@ -1,0 +1,431 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0E0E0E;
+    --cream: #F5F0E8;
+    --accent: #2D5016;
+    --accent-light: #4A7C25;
+    --gold: #C8973A;
+    --muted: #6B6560;
+    --border: #D8D0C4;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; background: var(--cream); z-index: 100;
+    animation: fadeDown .6s ease both;
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; letter-spacing: -.02em; }
+  .logo span { color: var(--accent); }
+  nav a { font-size: .85rem; color: var(--muted); text-decoration: none; font-weight: 400; }
+  nav a:hover { color: var(--ink); }
+  .nav-cta {
+    background: var(--accent); color: #fff !important;
+    padding: .45rem 1.1rem; border-radius: 2rem; font-size: .82rem; font-weight: 500;
+    transition: background .2s;
+  }
+  .nav-cta:hover { background: var(--accent-light) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 88vh; display: flex; flex-direction: column; justify-content: center;
+    padding: 5rem 2.5rem 3rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '§';
+    position: absolute; right: -2rem; top: 50%; transform: translateY(-50%);
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(14rem, 30vw, 28rem);
+    color: var(--border); line-height: 1; pointer-events: none;
+    animation: floatSymbol 8s ease-in-out infinite;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-size: .78rem; font-weight: 500; color: var(--accent);
+    letter-spacing: .08em; text-transform: uppercase;
+    margin-bottom: 1.8rem;
+    animation: fadeUp .7s .1s ease both;
+  }
+  .hero-tag::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 6vw, 5.2rem);
+    font-weight: 900; line-height: 1.05; letter-spacing: -.03em;
+    max-width: 720px;
+    animation: fadeUp .7s .2s ease both;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+  .hero-sub {
+    margin-top: 1.6rem; max-width: 500px;
+    font-size: 1.05rem; line-height: 1.7; color: var(--muted);
+    animation: fadeUp .7s .3s ease both;
+  }
+  .hero-actions {
+    margin-top: 2.4rem; display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap;
+    animation: fadeUp .7s .4s ease both;
+  }
+  .btn-primary {
+    background: var(--accent); color: #fff;
+    padding: .85rem 2rem; border-radius: 2rem;
+    font-size: .95rem; font-weight: 500; text-decoration: none;
+    border: none; cursor: pointer;
+    transition: transform .2s, box-shadow .2s, background .2s;
+    display: inline-flex; align-items: center; gap: .5rem;
+  }
+  .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(45,80,22,.25); }
+  .btn-ghost {
+    color: var(--muted); font-size: .88rem; text-decoration: none;
+    display: inline-flex; align-items: center; gap: .4rem;
+    transition: color .2s;
+  }
+  .btn-ghost:hover { color: var(--ink); }
+  .hero-note { font-size: .78rem; color: var(--muted); margin-top: .8rem; animation: fadeUp .7s .5s ease both; }
+
+  /* STATS */
+  .stats {
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 1.8rem 2.5rem;
+    display: flex; gap: 0; overflow: hidden;
+  }
+  .stat {
+    flex: 1; padding: .5rem 2rem; border-right: 1px solid var(--border);
+    animation: fadeUp .6s ease both;
+  }
+  .stat:first-child { padding-left: 0; }
+  .stat:last-child { border-right: none; }
+  .stat-val { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 700; color: var(--accent); }
+  .stat-lbl { font-size: .8rem; color: var(--muted); margin-top: .2rem; line-height: 1.4; }
+
+  /* PROBLEM */
+  .section { padding: 5rem 2.5rem; }
+  .section-tag {
+    font-size: .75rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--gold); display: flex; align-items: center; gap: .5rem; margin-bottom: 1.2rem;
+  }
+  .section-tag::before { content: ''; width: 20px; height: 1px; background: var(--gold); }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 700; line-height: 1.15; letter-spacing: -.025em;
+    max-width: 620px;
+  }
+  h2 em { font-style: italic; color: var(--accent); }
+  .problem-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    background: var(--border); margin-top: 3rem;
+    border: 1px solid var(--border);
+  }
+  .problem-card {
+    background: var(--cream); padding: 2rem;
+    transition: background .2s;
+  }
+  .problem-card:hover { background: #EDE8DE; }
+  .problem-icon { font-size: 1.5rem; margin-bottom: .8rem; }
+  .problem-title { font-size: 1rem; font-weight: 500; margin-bottom: .5rem; }
+  .problem-desc { font-size: .88rem; color: var(--muted); line-height: 1.6; }
+
+  /* HOW IT WORKS */
+  .how { background: var(--ink); color: var(--cream); padding: 5rem 2.5rem; }
+  .how .section-tag { color: var(--gold); }
+  .how .section-tag::before { background: var(--gold); }
+  .how h2 { color: var(--cream); max-width: 480px; margin-bottom: 3rem; }
+  .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+  .step-how { border-top: 1px solid #333; padding-top: 1.5rem; }
+  .step-num-how { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; color: #333; line-height: 1; margin-bottom: .8rem; }
+  .step-title-how { font-size: 1rem; font-weight: 500; color: var(--cream); margin-bottom: .5rem; }
+  .step-desc-how { font-size: .85rem; color: #888; line-height: 1.6; }
+
+  /* BENEFITS */
+  .benefits { padding: 5rem 2.5rem; }
+  .benefits-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-top: 3rem; }
+  .benefit-list { display: flex; flex-direction: column; gap: 1.5rem; }
+  .benefit {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: 1.4rem; border: 1px solid var(--border); border-radius: .5rem;
+    transition: border-color .2s, transform .2s;
+    cursor: default;
+  }
+  .benefit:hover { border-color: var(--accent); transform: translateX(4px); }
+  .benefit-icon-wrap {
+    width: 36px; height: 36px; border-radius: .4rem;
+    background: #EAF0E2; display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+  }
+  .benefit-title { font-size: .95rem; font-weight: 500; margin-bottom: .3rem; }
+  .benefit-desc { font-size: .83rem; color: var(--muted); line-height: 1.6; }
+  .benefits-visual {
+    position: sticky; top: 6rem;
+    background: var(--ink); border-radius: 1rem; padding: 2rem;
+    color: var(--cream);
+  }
+  .bv-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 1.2rem; }
+  .bv-tag { display: inline-block; background: var(--accent); color: #fff; font-size: .75rem; padding: .3rem .8rem; border-radius: 1rem; font-weight: 500; margin-bottom: 1rem; }
+  .bv-item { display: flex; justify-content: space-between; align-items: center; padding: .8rem 0; border-bottom: 1px solid #222; font-size: .85rem; }
+  .bv-item:last-child { border-bottom: none; }
+  .bv-item-label { color: #888; }
+  .bv-item-val { font-weight: 500; color: var(--cream); }
+  .bv-item-val.green { color: #6DBF45; }
+  .bv-item-val.gold { color: var(--gold); }
+
+  /* PRICING */
+  .pricing { background: #EDE8DE; padding: 5rem 2.5rem; text-align: center; }
+  .pricing h2 { margin: 0 auto 1rem; }
+  .pricing-sub { color: var(--muted); font-size: 1rem; margin-bottom: 3rem; }
+  .price-card {
+    max-width: 380px; margin: 0 auto;
+    background: var(--cream); border: 1px solid var(--border);
+    border-radius: 1rem; padding: 2.5rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,.08);
+  }
+  .price-badge { background: var(--accent); color: #fff; font-size: .75rem; font-weight: 500; padding: .3rem .9rem; border-radius: 1rem; display: inline-block; margin-bottom: 1.2rem; }
+  .price-amount { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 900; line-height: 1; }
+  .price-amount sup { font-size: 1.5rem; vertical-align: super; }
+  .price-period { color: var(--muted); font-size: .85rem; margin-top: .3rem; }
+  .price-trial { font-size: .82rem; color: var(--accent); font-weight: 500; margin: .8rem 0 1.5rem; }
+  .price-features { text-align: left; margin-bottom: 1.8rem; display: flex; flex-direction: column; gap: .7rem; }
+  .pf { font-size: .88rem; color: var(--muted); display: flex; gap: .6rem; align-items: flex-start; line-height: 1.4; }
+  .pf::before { content: '✓'; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+
+  /* CTA */
+  .cta-section {
+    padding: 6rem 2.5rem; text-align: center;
+    background: var(--ink); color: var(--cream); position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 100%, rgba(45,80,22,.4) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-section h2 { color: var(--cream); margin: 0 auto 1rem; position: relative; }
+  .cta-sub { color: #888; font-size: 1rem; max-width: 420px; margin: 0 auto 2.4rem; line-height: 1.7; position: relative; }
+  .cta-note { font-size: .78rem; color: #555; margin-top: .8rem; position: relative; }
+
+  /* FOOTER */
+  footer {
+    padding: 1.5rem 2.5rem;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: .78rem; color: var(--muted);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes floatSymbol { 0%,100% { transform: translateY(-50%) rotate(-2deg); } 50% { transform: translateY(-52%) rotate(2deg); } }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media(max-width:700px) {
+    nav { padding: 1rem 1.2rem; }
+    .hero, .section, .benefits, .pricing, .cta-section { padding-left: 1.2rem; padding-right: 1.2rem; }
+    .how { padding: 3rem 1.2rem; }
+    .stats { flex-direction: column; gap: 1rem; }
+    .stat { border-right: none; border-bottom: 1px solid var(--border); padding: .8rem 0; }
+    .problem-grid, .benefits-layout, .steps-grid { grid-template-columns: 1fr; }
+    .benefits-visual { display: none; }
+    footer { flex-direction: column; gap: .5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Statut<span>Juste</span></div>
+  <div style="display:flex;gap:1.5rem;align-items:center">
+    <a href="#comment">Comment ça marche</a>
+    <a href="#tarifs">Tarifs</a>
+    <a href="#questionnaire" class="nav-cta">Commencer →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">Pour les créateurs d'entreprise en France</div>
+  <h1>Quel statut choisir ?<br><em>Enfin une réponse<br>faite pour vous.</em></h1>
+  <p class="hero-sub">Micro-entreprise, EURL, SASU, SAS… En 8 questions, découvrez le statut juridique le plus adapté à votre projet — avec les démarches concrètes pour vous lancer.</p>
+  <div class="hero-actions">
+    <a href="#questionnaire" class="btn-primary">Trouver mon statut → <span style="opacity:.6;font-size:.8rem">2 min</span></a>
+    <a href="#comment" class="btn-ghost">Voir comment ça marche ↓</a>
+  </div>
+  <p class="hero-note">Essai gratuit 7 jours · Sans carte bancaire · Sans jargon juridique</p>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-val">6</div><div class="stat-lbl">statuts juridiques<br>couverts</div></div>
+  <div class="stat"><div class="stat-val">8</div><div class="stat-lbl">questions pour une<br>recommandation complète</div></div>
+  <div class="stat"><div class="stat-val">2 min</div><div class="stat-lbl">pour obtenir votre<br>résultat personnalisé</div></div>
+  <div class="stat"><div class="stat-val">0 €</div><div class="stat-lbl">pour tester<br>pendant 7 jours</div></div>
+</div>
+
+<!-- PROBLEM -->
+<section class="section" id="problem">
+  <div class="section-tag">Le problème</div>
+  <h2>Créer son entreprise est une <em>vraie jungle</em> en France.</h2>
+  <div class="problem-grid reveal">
+    <div class="problem-card">
+      <div class="problem-icon">🌀</div>
+      <div class="problem-title">Trop de choix, pas assez d'explications</div>
+      <div class="problem-desc">Micro, EI, EURL, SASU, SAS, SARL… chaque statut a ses règles, ses charges, ses avantages. Impossible de s'y retrouver sans aide.</div>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">💸</div>
+      <div class="problem-title">Un mauvais choix peut coûter cher</div>
+      <div class="problem-desc">Choisir le mauvais statut, c'est payer trop de charges, mal protéger son patrimoine, ou bloquer sa croissance future.</div>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">🕐</div>
+      <div class="problem-title">Les experts sont chers et lents</div>
+      <div class="problem-desc">Un expert-comptable ou un avocat coûte plusieurs centaines d'euros pour un premier conseil — et il faut attendre un rendez-vous.</div>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">📚</div>
+      <div class="problem-title">Les guides en ligne sont trop génériques</div>
+      <div class="problem-desc">Les articles de blog donnent des tableaux comparatifs qui ne tiennent pas compte de votre situation, votre secteur, vos objectifs.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="comment">
+  <div class="section-tag">Comment ça marche</div>
+  <h2>Simple. Rapide. <em>Personnalisé.</em></h2>
+  <div class="steps-grid reveal">
+    <div class="step-how">
+      <div class="step-num-how">01</div>
+      <div class="step-title-how">Répondez à 8 questions</div>
+      <div class="step-desc-how">Votre activité, votre CA prévu, vos associés, votre appétit pour les démarches… Des questions simples, en langage clair, sans jargon.</div>
+    </div>
+    <div class="step-how">
+      <div class="step-num-how">02</div>
+      <div class="step-title-how">Obtenez votre recommandation</div>
+      <div class="step-desc-how">On analyse votre profil et on vous recommande le statut le plus adapté — avec une explication claire des raisons et des alternatives.</div>
+    </div>
+    <div class="step-how">
+      <div class="step-num-how">03</div>
+      <div class="step-title-how">Passez à l'action</div>
+      <div class="step-desc-how">Chaque recommandation inclut les prochaines étapes concrètes : documents, coûts, délais, liens utiles. Vous partez avec un plan.</div>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section class="benefits" id="avantages">
+  <div class="section-tag">Pourquoi StatutJuste</div>
+  <h2>Tout ce dont vous avez besoin pour <em>bien démarrer.</em></h2>
+  <div class="benefits-layout">
+    <div class="benefit-list reveal">
+      <div class="benefit">
+        <div class="benefit-icon-wrap">🎯</div>
+        <div>
+          <div class="benefit-title">Recommandation personnalisée</div>
+          <div class="benefit-desc">Pas un tableau générique — une analyse de votre situation précise, avec le statut qui correspond vraiment à votre profil.</div>
+        </div>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon-wrap">📋</div>
+        <div>
+          <div class="benefit-title">Plan d'action concret</div>
+          <div class="benefit-desc">Pour chaque recommandation, vous recevez les étapes exactes à suivre, les coûts réels et les délais à prévoir.</div>
+        </div>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon-wrap">⚖️</div>
+        <div>
+          <div class="benefit-title">Comparatif des alternatives</div>
+          <div class="benefit-desc">On vous présente aussi les 2 autres statuts les plus proches de votre profil, avec leurs avantages et inconvénients.</div>
+        </div>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon-wrap">🔄</div>
+        <div>
+          <div class="benefit-title">Mis à jour régulièrement</div>
+          <div class="benefit-desc">Le droit évolue chaque année. Nos recommandations sont mises à jour pour refléter les dernières lois et plafonds en vigueur.</div>
+        </div>
+      </div>
+    </div>
+    <div class="benefits-visual reveal">
+      <div class="bv-tag">Votre recommandation</div>
+      <div class="bv-title">SASU — Recommandé ✓</div>
+      <div class="bv-item"><span class="bv-item-label">Protection patrimoine</span><span class="bv-item-val green">Totale</span></div>
+      <div class="bv-item"><span class="bv-item-label">Couverture sociale</span><span class="bv-item-val green">Assimilé salarié</span></div>
+      <div class="bv-item"><span class="bv-item-label">Levée de fonds</span><span class="bv-item-val green">Possible</span></div>
+      <div class="bv-item"><span class="bv-item-label">Coût de création</span><span class="bv-item-val gold">~212 €</span></div>
+      <div class="bv-item"><span class="bv-item-label">Délai d'immatriculation</span><span class="bv-item-val">10–12 jours</span></div>
+      <div style="margin-top:1.4rem;padding:1rem;background:#111;border-radius:.5rem">
+        <div style="font-size:.75rem;color:#666;margin-bottom:.5rem">Prochaine étape recommandée</div>
+        <div style="font-size:.85rem;color:#ccc;line-height:1.5">Rédiger vos statuts SASU — un modèle gratuit suffit pour démarrer.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="tarifs">
+  <div class="section-tag" style="justify-content:center">Tarif</div>
+  <h2>Un prix honnête.<br><em>Une valeur réelle.</em></h2>
+  <p class="pricing-sub">Moins cher qu'une heure avec un expert-comptable. Plus rapide qu'un RDV.</p>
+  <div class="price-card reveal">
+    <div class="price-badge">Accès complet</div>
+    <div class="price-amount"><sup>€</sup>19</div>
+    <div class="price-period">par mois, sans engagement</div>
+    <div class="price-trial">✦ 7 jours gratuits, sans carte bancaire</div>
+    <div class="price-features">
+      <div class="pf">Questionnaire personnalisé illimité</div>
+      <div class="pf">Recommandation complète avec alternatives</div>
+      <div class="pf">Plan d'action étape par étape</div>
+      <div class="pf">Coûts et délais détaillés</div>
+      <div class="pf">Mises à jour légales incluses</div>
+      <div class="pf">Accès à toutes les futures fonctionnalités</div>
+    </div>
+    <a href="#questionnaire" class="btn-primary" style="width:100%;justify-content:center">Commencer gratuitement →</a>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="questionnaire">
+  <div class="section-tag" style="justify-content:center;color:var(--gold)">Prêt à vous lancer ?</div>
+  <h2>Votre statut idéal est à<br><em>8 questions de vous.</em></h2>
+  <p class="cta-sub">Rejoignez les entrepreneurs qui ont choisi leur statut en toute confiance — sans rendez-vous, sans jargon, sans stress.</p>
+  <a href="#" class="btn-primary" style="font-size:1rem;padding:1rem 2.4rem">Trouver mon statut maintenant →</a>
+  <p class="cta-note">Essai gratuit 7 jours · Résultat immédiat · Annulation en 1 clic</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Statut<span>Juste</span></div>
+  <div>© 2025 StatutJuste · Mentions légales · Politique de confidentialité</div>
+  <div>Fait avec ❤️ en France</div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
