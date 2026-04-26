@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StatutJuste — Votre questionnaire personnalisé</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0E0E0E; --cream: #F5F0E8; --accent: #2D5016;
+    --accent-light: #4A7C25; --gold: #C8973A; --muted: #6B6560; --border: #D8D0C4;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--cream); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; display: flex; flex-direction: column; }
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 2.5rem; border-bottom: 1px solid var(--border); background: var(--cream); }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; }
+  .logo span { color: var(--accent); }
+  .nav-badge { font-size: .78rem; color: var(--accent); font-weight: 500; background: #EAF0E2; padding: .3rem .8rem; border-radius: 1rem; }
+  .main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem 1.2rem; }
+  .quiz-wrap { width: 100%; max-width: 540px; }
+  .progress-bar { height: 3px; background: var(--border); border-radius: 2px; margin-bottom: 2rem; }
+  .progress-fill { height: 3px; border-radius: 2px; background: var(--accent); transition: width .4s ease; }
+  .step-lbl { font-size: 11px; color: var(--muted); margin-bottom: 1rem; letter-spacing: .04em; }
+  .question { font-family: 'Playfair Display', serif; font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; line-height: 1.3; margin-bottom: .6rem; }
+  .hint { font-size: .88rem; color: var(--muted); margin-bottom: 1.6rem; line-height: 1.6; }
+  .options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.6rem; }
+  .opt { background: white; border: 1px solid var(--border); border-radius: .6rem; padding: 13px 16px; cursor: pointer; font-size: .9rem; color: var(--ink); text-align: left; transition: border-color .15s, background .15s; line-height: 1.4; font-family: inherit; }
+  .opt:hover { border-color: var(--accent); background: #F0F4EC; }
+  .opt.selected { border: 2px solid var(--accent); background: #F0F4EC; font-weight: 500; }
+  .opt-sub { font-size: .78rem; color: var(--muted); margin-top: 2px; font-weight: 300; }
+  .nav-btns { display: flex; justify-content: space-between; align-items: center; }
+  .btn-back { background: none; border: 1px solid var(--border); border-radius: 2rem; padding: .6rem 1.2rem; font-size: .85rem; color: var(--muted); cursor: pointer; font-family: inherit; }
+  .btn-back:hover { background: var(--border); }
+  .btn-next { background: var(--accent); border: none; border-radius: 2rem; padding: .7rem 1.6rem; font-size: .9rem; color: #fff; cursor: pointer; font-weight: 500; opacity: .35; transition: opacity .15s, background .15s; font-family: inherit; }
+  .btn-next.active { opacity: 1; }
+  .btn-next.active:hover { background: var(--accent-light); }
+
+  /* RESULT */
+  .result { display: none; }
+  .res-header { text-align: center; padding: 2rem 0 1.5rem; }
+  .res-emoji { font-size: 2.5rem; margin-bottom: .8rem; }
+  .res-badge { display: inline-block; font-size: .78rem; font-weight: 500; padding: .3rem 1rem; border-radius: 1rem; margin-bottom: .8rem; }
+  .res-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; margin-bottom: .5rem; }
+  .res-subtitle { font-size: .9rem; color: var(--muted); }
+  .res-body { background: white; border: 1px solid var(--border); border-radius: 1rem; padding: 1.5rem; margin: 1.2rem 0; }
+  .res-section { margin-bottom: 1.2rem; }
+  .res-section:last-child { margin-bottom: 0; }
+  .res-section-title { font-size: .75rem; font-weight: 500; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin-bottom: .7rem; }
+  .res-why { font-size: .9rem; color: var(--ink); line-height: 1.7; }
+  .alt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .alt-card { background: #F8F5F0; border-radius: .5rem; padding: .8rem; }
+  .alt-name { font-size: .88rem; font-weight: 500; color: var(--ink); margin-bottom: .3rem; }
+  .alt-desc { font-size: .78rem; color: var(--muted); line-height: 1.4; }
+  .steps-list { display: flex; flex-direction: column; gap: .7rem; }
+  .step-row { display: flex; gap: .8rem; align-items: flex-start; }
+  .step-n { width: 22px; height: 22px; border-radius: 50%; background: #EAF0E2; color: var(--accent); font-size: .75rem; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-t { font-size: .88rem; color: var(--ink); line-height: 1.5; }
+  .res-footer { text-align: center; padding: 1.5rem 0 2rem; }
+  .btn-restart { background: none; border: 1px solid var(--border); border-radius: 2rem; padding: .6rem 1.4rem; font-size: .85rem; color: var(--muted); cursor: pointer; font-family: inherit; margin-bottom: .8rem; }
+  .btn-restart:hover { background: var(--border); }
+  .res-note { font-size: .75rem; color: var(--muted); line-height: 1.6; }
+  footer { padding: 1rem 2.5rem; border-top: 1px solid var(--border); text-align: center; font-size: .75rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Statut<span>Juste</span></div>
+  <div class="nav-badge">✓ Accès confirmé</div>
+</nav>
+
+<div class="main">
+  <div class="quiz-wrap">
+
+    <div id="quiz">
+      <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+      <div class="step-lbl" id="step-lbl">Question 1 / 8</div>
+      <div class="question" id="q-text"></div>
+      <div class="hint" id="q-hint"></div>
+      <div class="options" id="q-opts"></div>
+      <div class="nav-btns">
+        <button class="btn-back" id="btn-back" onclick="back()">← Retour</button>
+        <button class="btn-next" id="btn-next" onclick="next()">Suivant →</button>
+      </div>
+    </div>
+
+    <div class="result" id="result">
+      <div class="res-header">
+        <div class="res-emoji">🎯</div>
+        <div class="res-badge" id="res-badge"></div>
+        <div class="res-title" id="res-title"></div>
+        <div class="res-subtitle">Voici votre recommandation personnalisée complète</div>
+      </div>
+      <div class="res-body">
+        <div class="res-section">
+          <div class="res-section-title">Pourquoi ce statut pour vous</div>
+          <div class="res-why" id="res-why"></div>
+        </div>
+        <div class="res-section">
+          <div class="res-section-title">Alternatives à considérer</div>
+          <div class="alt-grid" id="alt-grid"></div>
+        </div>
+        <div class="res-section">
+          <div class="res-section-title">Vos prochaines étapes concrètes</div>
+          <div class="steps-list" id="steps-list"></div>
+        </div>
+      </div>
+      <div class="res-footer">
+        <div><button class="btn-restart" onclick="restart()">← Recommencer</button></div>
+        <div class="res-note">Cette recommandation est fournie à titre informatif.<br>Pour les situations complexes, consultez un expert-comptable.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>© 2025 StatutJuste · Fait avec ❤️ en France</footer>
+
+<script>
+const questions = [
+  { q: "Quel est votre projet ?", hint: "La nature de votre activité influence directement les statuts disponibles.", opts: [
+    { label: "Activité de service (conseil, freelance, coaching…)", val: "service" },
+    { label: "Commerce ou vente de produits", val: "commerce" },
+    { label: "Activité artisanale ou manuelle", val: "artisan" },
+    { label: "Création de startup / projet tech", val: "startup" }
+  ]},
+  { q: "Serez-vous seul(e) ou avec des associés ?", hint: "Certains statuts sont réservés aux projets en solo, d'autres facilitent l'entrée d'associés.", opts: [
+    { label: "Seul(e)", sub: "Je lance seul, sans associés", val: "solo" },
+    { label: "Avec 1 associé", val: "associe1" },
+    { label: "Avec 2 associés ou plus", val: "associes" },
+    { label: "Je ne sais pas encore", val: "nsp" }
+  ]},
+  { q: "Quel chiffre d'affaires envisagez-vous la 1ère année ?", hint: "Le régime micro-entreprise a des plafonds : 77 700 € pour les services, 188 700 € pour le commerce.", opts: [
+    { label: "Moins de 15 000 €", sub: "Démarrage progressif", val: "ca_xs" },
+    { label: "Entre 15 000 € et 70 000 €", sub: "Activité partielle ou début solide", val: "ca_s" },
+    { label: "Entre 70 000 € et 150 000 €", sub: "Activité principale", val: "ca_m" },
+    { label: "Plus de 150 000 €", sub: "Ambitions élevées dès le départ", val: "ca_l" }
+  ]},
+  { q: "Avez-vous des charges professionnelles importantes ?", hint: "Loyer, matériel, sous-traitants… Si oui, déduire ces charges peut réduire votre imposition.", opts: [
+    { label: "Non, peu ou pas de charges", sub: "Activité légère, peu de frais", val: "charges_no" },
+    { label: "Oui, quelques charges (< 30 % du CA)", val: "charges_mid" },
+    { label: "Oui, beaucoup de charges (> 30 % du CA)", sub: "Matériel, locaux, salariés…", val: "charges_hi" }
+  ]},
+  { q: "Quelle protection sociale souhaitez-vous ?", hint: "Le statut influence directement vos droits à la retraite, maladie et chômage.", opts: [
+    { label: "Minimale — je veux payer le moins possible", val: "social_min" },
+    { label: "Correcte — un équilibre coût / couverture", val: "social_mid" },
+    { label: "Maximale — proche du statut salarié", val: "social_max" }
+  ]},
+  { q: "Souhaitez-vous protéger votre patrimoine personnel ?", hint: "En cas de difficultés, certains statuts protègent vos biens personnels (maison, épargne…).", opts: [
+    { label: "Oui, c'est important pour moi", sub: "Je veux une responsabilité limitée", val: "patrimoine_oui" },
+    { label: "Non, ce n'est pas une priorité", val: "patrimoine_non" },
+    { label: "Je ne sais pas ce que ça implique", val: "patrimoine_nsp" }
+  ]},
+  { q: "Envisagez-vous de lever des fonds ou d'avoir des investisseurs ?", hint: "Certains statuts sont bien plus adaptés pour accueillir des investisseurs.", opts: [
+    { label: "Non, je m'autofinance", val: "invest_no" },
+    { label: "Peut-être dans 1–2 ans", val: "invest_maybe" },
+    { label: "Oui, c'est dans mon plan", val: "invest_yes" }
+  ]},
+  { q: "Quel est votre rapport à la comptabilité ?", hint: "Certains statuts sont très simples à gérer seul ; d'autres nécessitent un expert-comptable.", opts: [
+    { label: "Je veux le minimum de paperasse", sub: "Simplicité avant tout", val: "admin_simple" },
+    { label: "Je suis prêt(e) à gérer une comptabilité sérieuse", val: "admin_ok" },
+    { label: "Je prendrai un expert-comptable de toute façon", val: "admin_expert" }
+  ]}
+];
+
+let current = 0, answers = {};
+
+function render() {
+  const q = questions[current];
+  document.getElementById('step-lbl').textContent = `Question ${current+1} / ${questions.length}`;
+  document.getElementById('prog').style.width = ((current / questions.length) * 100) + '%';
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-hint').textContent = q.hint;
+  const c = document.getElementById('q-opts');
+  c.innerHTML = '';
+  q.opts.forEach(o => {
+    const b = document.createElement('button');
+    b.className = 'opt' + (answers[current] === o.val ? ' selected' : '');
+    b.innerHTML = o.label + (o.sub ? `<div class="opt-sub">${o.sub}</div>` : '');
+    b.onclick = () => select(o.val, b);
+    c.appendChild(b);
+  });
+  document.getElementById('btn-back').style.visibility = current === 0 ? 'hidden' : 'visible';
+  document.getElementById('btn-next').className = 'btn-next' + (answers[current] ? ' active' : '');
+  document.getElementById('btn-next').textContent = current === questions.length - 1 ? 'Voir ma recommandation →' : 'Suivant →';
+}
+
+function select(val, btn) {
+  answers[current] = val;
+  document.querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('btn-next').className = 'btn-next active';
+}
+
+function next() {
+  if (!answers[current]) return;
+  if (current < questions.length - 1) { current++; render(); }
+  else showResult();
+}
+
+function back() { if (current > 0) { current--; render(); } }
+function restart() {
+  current = 0; answers = {};
+  document.getElementById('quiz').style.display = 'block';
+  document.getElementById('result').style.display = 'none';
+  render();
+}
+
+function showResult() {
+  const a = answers;
+  let reco, why, badge, badgeStyle, alts, steps;
+  const solo = a[1]==='solo', caHaut = a[2]==='ca_m'||a[2]==='ca_l';
+  const chargesHi = a[3]==='charges_hi', investOui = a[6]==='invest_yes'||a[6]==='invest_maybe';
+  const startup = a[0]==='startup', adminSimple = a[7]==='admin_simple';
+  const patrimoineOui = a[5]==='patrimoine_oui'||a[5]==='patrimoine_nsp';
+  const assoc = a[1]==='associes'||a[1]==='associe1', socialMax = a[4]==='social_max';
+
+  if (assoc && investOui) {
+    reco='SAS'; badge='Société par actions simplifiée'; badgeStyle='background:#EEEDFE;color:#3C3489';
+    why="Votre projet implique plusieurs associés et une potentielle levée de fonds : la SAS est le statut de référence. Elle offre une grande liberté statutaire, facilite l'entrée d'investisseurs, et protège totalement votre patrimoine personnel.";
+    alts=[{n:'SARL',d:'Plus encadrée, bonne si vous voulez des règles strictes entre associés'},{n:'SASU',d:'Si finalement vous lancez seul avec des ambitions de croissance'}];
+    steps=['Rédiger les statuts (avocat ou modèle en ligne)','Déposer le capital social (minimum 1 €)','Publier une annonce légale (~150–200 €)','Immatriculer sur Guichet-entreprises.fr','Ouvrir un compte bancaire professionnel'];
+  } else if (assoc) {
+    reco='SARL'; badge='Société à responsabilité limitée'; badgeStyle='background:#E1F5EE;color:#085041';
+    why="Vous lancez à plusieurs sans plan de levée de fonds immédiat : la SARL est le cadre le plus sécurisant. Elle encadre clairement les droits de chaque associé, limite la responsabilité au capital apporté, et est bien connue des banques.";
+    alts=[{n:'SAS',d:'Si vous anticipez des investisseurs ou une croissance rapide'},{n:'EURL',d:'Si finalement un associé se retire et vous restez seul'}];
+    steps=['Rédiger un pacte d\'associés','Déposer le capital social','Publier une annonce légale','Immatriculer sur Guichet-entreprises.fr','Désigner le gérant et ouvrir un compte pro'];
+  } else if (startup || investOui) {
+    reco='SASU'; badge='Société par actions simplifiée unipersonnelle'; badgeStyle='background:#EEEDFE;color:#3C3489';
+    why="Pour un projet tech ou avec ambitions de croissance, la SASU est le choix optimal. Elle vous permet d'être assimilé salarié (meilleure protection sociale), d'accueillir des investisseurs facilement, et de transformer la structure en SAS si vous prenez des associés.";
+    alts=[{n:'SAS',d:'Quand vous aurez des associés ou investisseurs'},{n:'EURL',d:'Si vous voulez payer moins de charges sociales au départ'}];
+    steps=['Rédiger les statuts (modèles disponibles en ligne)','Déposer le capital (minimum 1 €)','Publier une annonce légale','Immatriculer sur Guichet-entreprises.fr','Ouvrir un compte bancaire professionnel dédié'];
+  } else if (caHaut || chargesHi || patrimoineOui) {
+    if (socialMax) {
+      reco='SASU'; badge='Société par actions simplifiée unipersonnelle'; badgeStyle='background:#EEEDFE;color:#3C3489';
+      why="Avec un CA élevé, des charges importantes et une priorité sur la protection sociale, la SASU s'impose. Le président est assimilé salarié : retraite, maladie, prévoyance comparables à un cadre. Votre patrimoine personnel est totalement protégé.";
+      alts=[{n:'EURL',d:'Moins de charges sociales mais protection moindre'},{n:'SAS',d:'Si vous prenez des associés'}];
+      steps=['Rédiger les statuts SASU','Déposer le capital social','Publication d\'annonce légale','Immatriculation Guichet-entreprises.fr','Prendre un expert-comptable (recommandé à ce niveau de CA)'];
+    } else {
+      reco='EURL'; badge='Entreprise unipersonnelle à responsabilité limitée'; badgeStyle='background:#FAEEDA;color:#633806';
+      why="Avec un CA ou des charges importants, et en solo, l'EURL vous offre le meilleur équilibre : responsabilité limitée, possibilité de déduire les charges réelles, et régime TNS moins coûteux que la SASU.";
+      alts=[{n:'SASU',d:'Si la protection sociale est une priorité absolue'},{n:'EI',d:'Plus simple mais sans protection du patrimoine'}];
+      steps=['Rédiger les statuts EURL','Déposer le capital social (minimum 1 €)','Publier une annonce légale','Immatriculer sur Guichet-entreprises.fr','Prévoir un expert-comptable pour optimiser la rémunération'];
+    }
+  } else if (adminSimple && !caHaut && !chargesHi) {
+    reco='Micro-entreprise'; badge='Régime micro-entrepreneur'; badgeStyle='background:#E6F1FB;color:#0C447C';
+    why="Pour démarrer simplement avec un CA modéré et peu de charges, la micro-entreprise est imbattable. Création en 10 minutes en ligne, comptabilité ultra-simple, cotisations proportionnelles au CA. Idéal pour tester votre activité.";
+    alts=[{n:'EI',d:'Si vous dépassez les plafonds micro ou voulez déduire des charges'},{n:'EURL',d:'Si vous souhaitez protéger votre patrimoine personnel'}];
+    steps=['Créer votre compte sur Guichet-entreprises.fr (10 min)','Choisir votre code APE / activité','Déclarer vos revenus chaque mois ou trimestre sur autoentrepreneur.urssaf.fr','Ouvrir un compte bancaire dédié (obligatoire si CA > 10 000 €)','Facturer vos clients avec vos mentions légales'];
+  } else {
+    reco='EI'; badge='Entreprise individuelle'; badgeStyle='background:#EAF3DE;color:#27500A';
+    why="L'entreprise individuelle (hors micro) vous permet de déduire vos charges réelles tout en restant dans une structure simple. Depuis 2022, l'EI protège automatiquement votre résidence principale.";
+    alts=[{n:'Micro-entreprise',d:'Si vos charges sont faibles et que vous voulez encore plus de simplicité'},{n:'EURL',d:'Si vous voulez une séparation totale du patrimoine'}];
+    steps=['Immatriculer sur Guichet-entreprises.fr','Choisir votre régime fiscal (micro ou réel)','Tenir une comptabilité simple (recettes / dépenses)','Déclarer et payer vos cotisations via l\'URSSAF','Consulter un expert-comptable si CA > 30 000 €'];
+  }
+
+  document.getElementById('quiz').style.display = 'none';
+  const res = document.getElementById('result');
+  res.style.display = 'block';
+  document.getElementById('prog').style.width = '100%';
+  document.getElementById('res-badge').textContent = badge;
+  document.getElementById('res-badge').style.cssText = badgeStyle + ';font-size:.78rem;font-weight:500;padding:.3rem 1rem;border-radius:1rem;display:inline-block;margin-bottom:.8rem';
+  document.getElementById('res-title').textContent = reco;
+  document.getElementById('res-why').textContent = why;
+  const ag = document.getElementById('alt-grid');
+  ag.innerHTML = alts.map(a => `<div class="alt-card"><div class="alt-name">${a.n}</div><div class="alt-desc">${a.d}</div></div>`).join('');
+  const sl = document.getElementById('steps-list');
+  sl.innerHTML = steps.map((s,i) => `<div class="step-row"><div class="step-n">${i+1}</div><div class="step-t">${s}</div></div>`).join('');
+  window.scrollTo(0,0);
+}
+
+render();
+</script>
+</body>
+</html>
